@@ -308,7 +308,7 @@ input,select{font:inherit}
       <div style="display:flex;flex-direction:column;border-top:1px solid #1c1b18">
         <sc-for list="{{ cartItems }}" as="c" hint-placeholder-count="2">
           <div style="display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:20px;padding:20px 0;border-bottom:1px solid #d9d4c8;align-items:center">
-            <div style="aspect-ratio:3/4;background:repeating-linear-gradient(135deg,#e9e4d8 0 6px,#efebe1 6px 12px)"></div>
+            <img src="{{ c.img }}" alt="{{ c.name }}" onClick="{{ c.open }}" style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block;cursor:pointer">
             <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
               <span style="font-size:12px;color:#6b675e">{{ c.maker }}</span>
               <span style="font-family:'Shippori Mincho',serif;font-size:17px;line-height:1.4">{{ c.name }}</span>
@@ -516,7 +516,7 @@ cur:{...cur,story:mk.story,makerImg:mk.wimg,mainImg:(gallery(cur)[s.gi]||cur.img
 addLabel:s.added?'Added ✓':t.add,
 addCur:()=>this.setState(st=>{const ex=st.cart.find(c=>c.id===st.pid);return{added:true,cart:ex?st.cart.map(c=>c.id===st.pid?{...c,qty:c.qty+st.qty}:c):[...st.cart,{id:st.pid,qty:st.qty}]}}),
 makers:MAKERS.map(m=>({...m,label:m.name,hasImg:!!m.img,noImg:!m.img,catLabel:CATS.find(c=>c.key===m.cat).label,shop:()=>{this.setState({cat:m.cat});this.go('shop')}})),
-cartItems:items.map(c=>({...c,lineStr:usd(c.price*c.qty),inc:()=>this.setQty(c.id,1),dec:()=>this.setQty(c.id,-1),remove:()=>this.setState(st=>({cart:st.cart.filter(x=>x.id!==c.id)}))})),
+cartItems:items.map(c=>({...c,open:()=>this.openP(c.id),lineStr:usd(c.price*c.qty),inc:()=>this.setQty(c.id,1),dec:()=>this.setQty(c.id,-1),remove:()=>this.setState(st=>({cart:st.cart.filter(x=>x.id!==c.id)}))})),
 cartEmpty:!items.length,
 shipOpts:[{key:'air',title:'Air freight',days:'Arrives in 5–7 days',price:air,note:'Tracked, insured. Best for gifts with a date.'},{key:'sea',title:'Sea freight',days:'Arrives in 30–60 days',price:sea,note:'Tracked. The economical choice for heavy items.'}].map(o=>({...o,priceStr:usd(o.price),selected:s.ship===o.key,pick:()=>this.setState({ship:o.key})})),
 shipLabel:s.ship==='air'?'Shipping (air)':'Shipping (sea)',subStr:usd(sub),shipStr:usd(shipCost),totalStr:usd(sub+shipCost),
