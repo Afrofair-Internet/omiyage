@@ -486,7 +486,7 @@ if(/sake|drink|alcohol/.test(q))return'For a first bottle, try the Sparkling Sak
 if(/gift|\$|under|cheap|budget/.test(q))return'Under $100: Uji Hikari matcha ($38), the indigo furoshiki ($54), a Mashiko mug ($72) or a Naruko kokeshi ($85). Gift wrapping is free.';
 return'I can recommend gifts, explain each maker, compare shipping or check import rules for your country. What are you looking for?';}
 class Component extends DCLogic{
-state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,gi:0,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,teaserHidden:false,draft:'',msgs:[{ai:true,text:"May I help you? I'm Hana, your shopping concierge. Our recommended sake this season is Junmai Daiginjo “Shizuku” ($68). Ask me about gifts, sake, or shipping to your country."}],added:false};
+state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,gi:0,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,teaserHidden:false,draft:'',msgs:[{ai:true,text:"Welcome. How may I help you? I'm Hana, your shopping concierge. Our recommended sake this season is Junmai Daiginjo “Shizuku” ($68). Ask me about gifts, sake, or shipping to your country."}],added:false};
 go=s=>{this.setState({screen:s,added:false});window.scrollTo(0,0)};
 openP=id=>{this.setState({screen:'product',pid:id,qty:1,gi:0,added:false});window.scrollTo(0,0)};
 send=text=>{if(!text.trim())return;this.setState(s=>({draft:'',msgs:[...s.msgs,{me:true,text},{ai:true,text:reply(text)}]}))};
