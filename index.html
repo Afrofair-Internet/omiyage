@@ -471,8 +471,8 @@ const ACTS=[
 {name:'Washi papermaking',img:'assets/a-washi.png',place:'Mino, Gifu',dur:'2 hours',price:60,shot:'washi sheets drying',desc:'Make your own sheets of Mino washi from kozo fibre, with pressed leaves or flowers.'},
 {name:'Sake brewery tour and tasting',img:'assets/a-sake.png',place:'Niigata',dur:'2.5 hours',price:80,shot:'cedar barrels',desc:'Walk the brewery floor with the toji and taste six sakes straight from the tank.'},
 {name:'Tea ceremony and matcha whisking',img:'assets/a-tea.png',place:'Uji, Kyoto',dur:'1.5 hours',price:70,shot:'tea room · tatami',desc:'A short ceremony in a farmhouse tea room, then whisk your own bowl with first-harvest matcha.'}];
-const GALLERY={p1:'sake',p2:'koshu',p3:'sparkling',p4:'matcha',p5:'gyokuro',p7:'furoshiki'};
-const GN={sake:4,koshu:4,sparkling:4,matcha:4,gyokuro:1,furoshiki:3};
+const GALLERY={p1:'sake',p2:'koshu',p3:'sparkling',p4:'matcha',p5:'gyokuro',p7:'furoshiki',p8:'mug'};
+const GN={sake:4,koshu:4,sparkling:4,matcha:4,gyokuro:2,furoshiki:3,mug:1};
 const gallery=p=>{const k=GALLERY[p.id];return[p.img,...(k?Array.from({length:GN[k]},(_,i)=>'assets/gallery/p-'+k+'-'+(i+1)+'.webp'):[])].filter(Boolean)};
 const T={
 en:{nav:['Home','Shop','Experiences','Makers'],cart:'Cart',shipBar:'Worldwide shipping from Japan · Choose air or sea freight',heroTitle:'The finest of Japan, sent to wherever you are.',heroSub:'Sake from century-old breweries, ceremonial matcha and handmade crafts. Chosen in Japan and shipped worldwide by air or sea.',shopNow:'Shop the collection',add:'Add to cart',checkout:'Checkout with Shopify',ask:'Ask Hana',book:'Request booking'},
