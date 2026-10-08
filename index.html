@@ -198,13 +198,14 @@ input,select{font:inherit}
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:start">
     <div style="display:flex;flex-direction:column;gap:12px">
-      <sc-if value="{{ cur.hasImg }}" hint-placeholder-val="{{ false }}"><img src="{{ cur.img }}" alt="{{ cur.label }}" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"></sc-if><sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><div style="aspect-ratio:4/5;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b675e">{{ cur.shot }}</div></sc-if>
-      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
-        <div style="aspect-ratio:1/1;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px)"></div>
-        <div style="aspect-ratio:1/1;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px)"></div>
-        <div style="aspect-ratio:1/1;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px)"></div>
-        <div style="aspect-ratio:1/1;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px)"></div>
+      <sc-if value="{{ cur.hasImg }}" hint-placeholder-val="{{ false }}"><img src="{{ cur.mainImg }}" alt="{{ cur.label }}" style="width:100%;aspect-ratio:4/5;object-fit:cover;display:block"></sc-if><sc-if value="{{ cur.noImg }}" hint-placeholder-val="{{ true }}"><div style="aspect-ratio:4/5;background:repeating-linear-gradient(135deg,#e9e4d8 0 10px,#efebe1 10px 20px);display:flex;align-items:flex-end;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6b675e">{{ cur.shot }}</div></sc-if>
+      <sc-if value="{{ hasGallery }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px">
+        <sc-for list="{{ thumbs }}" as="g" hint-placeholder-count="5">
+          <img src="{{ g.src }}" alt="{{ g.alt }}" onClick="{{ g.pick }}" style="{{ g.style }}">
+        </sc-for>
       </div>
+      </sc-if>
     </div>
     <div style="display:flex;flex-direction:column;gap:24px;position:sticky;top:110px">
       <div style="display:flex;flex-direction:column;gap:10px">
@@ -233,6 +234,7 @@ input,select{font:inherit}
       </div>
     </div>
   </div>
+  <sc-if value="{{ hasMaker }}" hint-placeholder-val="{{ true }}">
   <section style="margin-top:96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:48px;border-top:1px solid #d9d4c8;padding-top:48px">
     <div style="display:flex;flex-direction:column;gap:12px">
       <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#a8432a">ABOUT THE MAKER</span>
@@ -242,6 +244,7 @@ input,select{font:inherit}
     </div>
     <img src="{{ cur.makerImg }}" alt="{{ cur.maker }}" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
   </section>
+  </sc-if>
 </main>
 </sc-if>
 
@@ -468,6 +471,9 @@ const ACTS=[
 {name:'Washi papermaking',img:'assets/a-washi.png',place:'Mino, Gifu',dur:'2 hours',price:60,shot:'washi sheets drying',desc:'Make your own sheets of Mino washi from kozo fibre, with pressed leaves or flowers.'},
 {name:'Sake brewery tour and tasting',img:'assets/a-sake.png',place:'Niigata',dur:'2.5 hours',price:80,shot:'cedar barrels',desc:'Walk the brewery floor with the toji and taste six sakes straight from the tank.'},
 {name:'Tea ceremony and matcha whisking',img:'assets/a-tea.png',place:'Uji, Kyoto',dur:'1.5 hours',price:70,shot:'tea room · tatami',desc:'A short ceremony in a farmhouse tea room, then whisk your own bowl with first-harvest matcha.'}];
+const GALLERY={p1:'sake',p2:'koshu',p3:'sparkling',p4:'matcha',p5:'gyokuro',p7:'furoshiki'};
+const GN={sake:4,koshu:4,sparkling:4,matcha:4,gyokuro:1,furoshiki:3};
+const gallery=p=>{const k=GALLERY[p.id];return[p.img,...(k?Array.from({length:GN[k]},(_,i)=>'assets/gallery/p-'+k+'-'+(i+1)+'.webp'):[])].filter(Boolean)};
 const T={
 en:{nav:['Home','Shop','Experiences','Makers'],cart:'Cart',shipBar:'Worldwide shipping from Japan · Choose air or sea freight',heroTitle:'The finest of Japan, sent to wherever you are.',heroSub:'Sake from century-old breweries, ceremonial matcha and handmade crafts. Chosen in Japan and shipped worldwide by air or sea.',shopNow:'Shop the collection',add:'Add to cart',checkout:'Checkout with Shopify',ask:'Ask Hana',book:'Request booking'},
 zh:{nav:['首页','商品','体验','生产者'],cart:'购物车',shipBar:'从日本发货至全球 · 可选空运或海运',heroTitle:'将日本的珍品，送到您身边。',heroSub:'百年酒藏的清酒、仪式级抹茶与手工艺品。在日本精选，以空运或海运寄往全球。',shopNow:'选购商品',add:'加入购物车',checkout:'前往结账',ask:'咨询 Hana',book:'申请预约'},
@@ -480,9 +486,9 @@ if(/sake|drink|alcohol/.test(q))return'For a first bottle, try the Sparkling Sak
 if(/gift|\$|under|cheap|budget/.test(q))return'Under $100: Uji Hikari matcha ($38), the indigo furoshiki ($54), a Mashiko mug ($72) or a Naruko kokeshi ($85). Gift wrapping is free.';
 return'I can recommend gifts, explain each maker, compare shipping or check import rules for your country. What are you looking for?';}
 class Component extends DCLogic{
-state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,teaserHidden:false,draft:'',msgs:[{ai:true,text:"May I help you? I'm Hana, your shopping concierge. Our recommended sake this season is Junmai Daiginjo “Shizuku” ($68). Ask me about gifts, sake, or shipping to your country."}],added:false};
+state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,gi:0,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,teaserHidden:false,draft:'',msgs:[{ai:true,text:"May I help you? I'm Hana, your shopping concierge. Our recommended sake this season is Junmai Daiginjo “Shizuku” ($68). Ask me about gifts, sake, or shipping to your country."}],added:false};
 go=s=>{this.setState({screen:s,added:false});window.scrollTo(0,0)};
-openP=id=>{this.setState({screen:'product',pid:id,qty:1,added:false});window.scrollTo(0,0)};
+openP=id=>{this.setState({screen:'product',pid:id,qty:1,gi:0,added:false});window.scrollTo(0,0)};
 send=text=>{if(!text.trim())return;this.setState(s=>({draft:'',msgs:[...s.msgs,{me:true,text},{ai:true,text:reply(text)}]}))};
 setQty=(id,d)=>this.setState(s=>({cart:s.cart.map(c=>c.id===id?{...c,qty:Math.max(1,c.qty+d)}:c)}));
 card=p=>({...p,hasImg:!!p.img,noImg:!p.img,label:p.name,priceStr:usd(p.price),shot:'product shot · '+p.jp,catLabel:CATS.find(c=>c.key===p.cat).label,open:()=>this.openP(p.id)});
@@ -491,7 +497,7 @@ const byId=id=>PRODUCTS.find(p=>p.id===id);
 const items=s.cart.map(c=>({...byId(c.id),qty:c.qty}));
 const count=items.reduce((a,b)=>a+b.qty,0),sub=items.reduce((a,b)=>a+b.price*b.qty,0);
 const air=count?18+6*count:0,sea=count?8+3*count:0,shipCost=s.ship==='air'?air:sea;
-const cur=this.card(byId(s.pid)),mk=MAKERS.find(m=>m.id===cur.maker);
+const cur=this.card(byId(s.pid)),mk=MAKERS.find(m=>m.id===cur.maker)||{};
 const list=PRODUCTS.filter(p=>s.cat==='all'||p.cat===s.cat);
 return{t,lang:s.lang,setLang:e=>this.setState({lang:e.target.value}),
 nav:keys.map((k,i)=>({label:t.nav[i],active:s.screen===k||(k==='shop'&&s.screen==='product'),go:()=>this.go(k)})),
@@ -506,7 +512,7 @@ acts:ACTS.map(a=>({...a,label:a.name,hasImg:!!a.img,noImg:!a.img,priceStr:usd(a.
 shopTitle:s.cat==='all'?'All products':CATS.find(c=>c.key===s.cat).label,
 filterList:[{key:'all',label:'All products'},...CATS].map(c=>({label:c.label,active:s.cat===c.key,pick:()=>this.setState({cat:c.key})})),
 shopList:list.map(this.card),shopCount:list.length,
-cur:{...cur,story:mk.story,makerImg:mk.wimg},qty:s.qty,qtyInc:()=>this.setState({qty:s.qty+1}),qtyDec:()=>this.setState({qty:Math.max(1,s.qty-1)}),
+cur:{...cur,story:mk.story,makerImg:mk.wimg,mainImg:(gallery(cur)[s.gi]||cur.img)},hasMaker:!!mk.story,hasGallery:gallery(cur).length>1,thumbs:gallery(cur).map((src,i)=>({src,alt:cur.name+' '+(i+1),pick:()=>this.setState({gi:i}),style:'width:100%;aspect-ratio:1/1;object-fit:cover;display:block;cursor:pointer;box-sizing:border-box;border:'+(i===s.gi?'2px solid #a8432a':'1px solid #d9d4c8')})),qty:s.qty,qtyInc:()=>this.setState({qty:s.qty+1}),qtyDec:()=>this.setState({qty:Math.max(1,s.qty-1)}),
 addLabel:s.added?'Added ✓':t.add,
 addCur:()=>this.setState(st=>{const ex=st.cart.find(c=>c.id===st.pid);return{added:true,cart:ex?st.cart.map(c=>c.id===st.pid?{...c,qty:c.qty+st.qty}:c):[...st.cart,{id:st.pid,qty:st.qty}]}}),
 makers:MAKERS.map(m=>({...m,label:m.name,hasImg:!!m.img,noImg:!m.img,catLabel:CATS.find(c=>c.key===m.cat).label,shop:()=>{this.setState({cat:m.cat});this.go('shop')}})),
