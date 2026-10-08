@@ -406,10 +406,39 @@ input,select{font:inherit}
       </div>
     </div>
   </sc-if>
-  <div onClick="{{ toggleChat }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;background:#22201c;color:#f3efe6;padding:8px 20px 8px 8px;border-radius:999px;box-shadow:0 10px 30px rgba(28,27,24,0.25)">
-    <img src="assets/avatar-hana.png" alt="Hana" style="width:44px;height:44px;border-radius:50%;flex:none;object-fit:cover;display:block">
-    <span style="font-size:13px;letter-spacing:0.04em">{{ t.ask }}</span>
+  <sc-if value="{{ showAvatar }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;align-items:flex-end;gap:16px">
+    <sc-if value="{{ showTeaser }}" hint-placeholder-val="{{ true }}">
+      <div style="position:relative;width:min(300px,calc(100vw - 220px));background:#fbfaf6;border:1px solid #d9d4c8;box-shadow:0 18px 44px rgba(28,27,24,0.2);padding:20px 22px;display:flex;flex-direction:column;gap:10px;margin-bottom:90px">
+        <button onClick="{{ hideTeaser }}" style="position:absolute;top:6px;right:6px;background:none;border:none;color:#6b675e;font-size:16px;width:28px;height:28px">×</button>
+        <span style="font-family:'Shippori Mincho',serif;font-size:22px;color:#1c1b18">May I help you?</span>
+        <span style="font-size:14px;line-height:1.65;color:#1c1b18">Our recommended sake this season is <span style="color:#a8432a">Junmai Daiginjo “Shizuku”</span> from Kurahashi Brewery in Niigata. Light, fruity and best served chilled.</span>
+        <span style="font-size:12px;color:#6b675e">I can answer in English, 中文, 한국어 and 日本語.</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <button onClick="{{ openSake }}" style="background:#a8432a;color:#fbfaf6;border:none;padding:10px 16px;font-size:13px;letter-spacing:0.04em">See this sake</button>
+          <button onClick="{{ openChat }}" style="background:none;color:#1c1b18;border:1px solid #1c1b18;padding:10px 16px;font-size:13px;letter-spacing:0.04em">Chat with Hana</button>
+        </div>
+        <span style="position:absolute;right:-9px;bottom:36px;width:16px;height:16px;background:#fbfaf6;border-top:1px solid #d9d4c8;border-right:1px solid #d9d4c8;transform:rotate(45deg)"></span>
+      </div>
+    </sc-if>
+    <div onClick="{{ openChat }}" style="cursor:pointer;position:relative;width:clamp(170px,22vw,280px);aspect-ratio:4/5;background:#22201c;border:3px solid #a8432a;box-shadow:0 18px 44px rgba(0,0,0,0.3);overflow:hidden">
+      <img src="assets/avatar-hana.png" alt="Hana, AI concierge" style="width:100%;height:100%;object-fit:cover;object-position:center 25%;display:block">
+      <div style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.55);color:#f3efe6;padding:4px 10px;border-radius:999px;font-size:11px;letter-spacing:0.04em">
+        <span style="width:7px;height:7px;border-radius:50%;background:#5fb07c"></span>LIVE
+      </div>
+      <button onClick="{{ stopProp }}" style="position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,0.55);color:#f3efe6;font-size:11px;letter-spacing:0.02em">♪</button>
+      <div style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:32px 14px 12px;display:flex;justify-content:space-between;align-items:flex-end;color:#f3efe6">
+        <div style="display:flex;flex-direction:column;line-height:1.35">
+          <span style="font-family:'Shippori Mincho',serif;font-size:18px">Hana</span>
+          <span style="font-size:11px;color:#e6e0d4">AI concierge</span>
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:3px;height:18px">
+          <span style="width:3px;height:8px;background:#f3efe6"></span><span style="width:3px;height:16px;background:#f3efe6"></span><span style="width:3px;height:11px;background:#f3efe6"></span><span style="width:3px;height:14px;background:#f3efe6"></span>
+        </div>
+      </div>
+    </div>
   </div>
+  </sc-if>
 </div>
 </div>
 </x-dc>
@@ -451,7 +480,7 @@ if(/sake|drink|alcohol/.test(q))return'For a first bottle, try the Sparkling Sak
 if(/gift|\$|under|cheap|budget/.test(q))return'Under $100: Uji Hikari matcha ($38), the indigo furoshiki ($54), a Mashiko mug ($72) or a Naruko kokeshi ($85). Gift wrapping is free.';
 return'I can recommend gifts, explain each maker, compare shipping or check import rules for your country. What are you looking for?';}
 class Component extends DCLogic{
-state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,draft:'',msgs:[{ai:true,text:"Hello, I'm Hana, your shopping concierge. Ask me about gifts, sake, or shipping to your country."}],added:false};
+state={screen:'home',lang:'en',cat:'all',pid:'p1',qty:1,cart:[{id:'p1',img:'assets/p-sake.png',qty:1},{id:'p4',qty:2}],ship:'air',chatOpen:false,teaserHidden:false,draft:'',msgs:[{ai:true,text:"May I help you? I'm Hana, your shopping concierge. Our recommended sake this season is Junmai Daiginjo “Shizuku” ($68). Ask me about gifts, sake, or shipping to your country."}],added:false};
 go=s=>{this.setState({screen:s,added:false});window.scrollTo(0,0)};
 openP=id=>{this.setState({screen:'product',pid:id,qty:1,added:false});window.scrollTo(0,0)};
 send=text=>{if(!text.trim())return;this.setState(s=>({draft:'',msgs:[...s.msgs,{me:true,text},{ai:true,text:reply(text)}]}))};
@@ -485,7 +514,7 @@ cartItems:items.map(c=>({...c,lineStr:usd(c.price*c.qty),inc:()=>this.setQty(c.i
 cartEmpty:!items.length,
 shipOpts:[{key:'air',title:'Air freight',days:'Arrives in 5–7 days',price:air,note:'Tracked, insured. Best for gifts with a date.'},{key:'sea',title:'Sea freight',days:'Arrives in 30–60 days',price:sea,note:'Tracked. The economical choice for heavy items.'}].map(o=>({...o,priceStr:usd(o.price),selected:s.ship===o.key,pick:()=>this.setState({ship:o.key})})),
 shipLabel:s.ship==='air'?'Shipping (air)':'Shipping (sea)',subStr:usd(sub),shipStr:usd(shipCost),totalStr:usd(sub+shipCost),
-chatOpen:s.chatOpen,toggleChat:()=>this.setState({chatOpen:!s.chatOpen}),openChat:()=>this.setState({chatOpen:true}),
+chatOpen:s.chatOpen,showAvatar:!s.chatOpen,stopProp:e=>e.stopPropagation(),showTeaser:!s.chatOpen&&!s.teaserHidden,openSake:()=>{this.setState({teaserHidden:true});this.openP('p1')},hideTeaser:()=>this.setState({teaserHidden:true}),toggleChat:()=>this.setState({chatOpen:!s.chatOpen}),openChat:()=>this.setState({chatOpen:true}),
 msgs:s.msgs,draft:s.draft,setDraft:e=>this.setState({draft:e.target.value}),onKey:e=>{if(e.key==='Enter')this.send(s.draft)},sendDraft:()=>this.send(s.draft),
 suggestions:['Gifts under $100','Which sake to start with?','Air or sea?'].map(x=>({text:x,send:()=>this.send(x)}))};}}
 </script>
